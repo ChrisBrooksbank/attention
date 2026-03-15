@@ -198,3 +198,110 @@ export function configToSustainedOptions(
     seed,
   };
 }
+
+export interface NBackItem extends StimulusItem {
+  /** The index in the sequence this item matches (i - nLevel), or null if not a target */
+  matchIndex: number | null;
+}
+
+export interface GenerateNBackOptions {
+  totalTrials?: number;
+  nLevel?: number; // 1, 2, or 3; default 1
+  targetRate?: number; // fraction of trials that are targets, default ~0.30
+  stimulusSet?: string[]; // symbols to draw from; default letters A-Z minus confusables
+  difficulty?: number; // 1–10; higher = more items in stimulus set (harder to discriminate)
+  seed?: number;
+}
+
+// Letters easy to distinguish at low difficulty (no similar-looking pairs)
+const NBACK_EASY_LETTERS = 'ABCDFGHJKLMNPQRSTUVWXYZ'.split('');
+
+/**
+ * Generate an N-Back working memory stimulus sequence.
+ * Each item is a letter; `isTarget` is true when the current letter matches
+ * the letter shown exactly N positions earlier.
+ * Sequences are reproducible given the same seed.
+ */
+export function generateNBack(opts: GenerateNBackOptions = {}): NBackItem[] {
+  const {
+    totalTrials = 30,
+    nLevel = 1,
+    targetRate = 0.3,
+    difficulty = 1,
+    seed = Date.now(),
+  } = opts;
+
+  const rand = mulberry32(seed);
+
+  // Choose stimulus pool based on difficulty: more letters → harder to track
+  let pool: string[];
+  if (opts.stimulusSet) {
+    pool = opts.stimulusSet;
+  } else if (difficulty <= 3) {
+    pool = NBACK_EASY_LETTERS.slice(0, 6);  // small pool, easier to hold in memory
+  } else if (difficulty <= 6) {
+    pool = NBACK_EASY_LETTERS.slice(0, 10);
+  } else {
+    pool = NBACK_EASY_LETTERS.slice(0, 16);
+  }
+
+  const items: NBackItem[] = [];
+
+  // Decide which positions (after nLevel seed positions) should be targets
+  const eligibleCount = totalTrials - nLevel;
+  const targetCount = Math.min(Math.round(eligibleCount * targetRate), eligibleCount);
+
+  // Build a random target schedule for the eligible positions
+  const targetSchedule = new Array(eligibleCount).fill(false);
+  let placed = 0;
+  // Place targets using reservoir-style random selection
+  for (let i = 0; i < eligibleCount && placed < targetCount; i++) {
+    const remaining = eligibleCount - i;
+    const needed = targetCount - placed;
+    if (rand() < needed / remaining) {
+      targetSchedule[i] = true;
+      placed++;
+    }
+  }
+
+  // Fill seed positions with random non-repeating stimuli
+  for (let i = 0; i < nLevel; i++) {
+    const idx = Math.floor(rand() * pool.length);
+    items.push({ stimulus: pool[idx], isTarget: false, matchIndex: null });
+  }
+
+  // Fill remaining positions following the target schedule
+  for (let i = 0; i < eligibleCount; i++) {
+    const shouldBeTarget = targetSchedule[i];
+    if (shouldBeTarget) {
+      // Repeat the stimulus from N steps back
+      const matchIndex = i; // index in items array (already has nLevel items)
+      const stimulus = items[matchIndex].stimulus;
+      items.push({ stimulus, isTarget: true, matchIndex });
+    } else {
+      // Pick a random stimulus that is NOT the N-back item (to avoid accidental targets)
+      const nBackStimulus = items[i].stimulus;
+      const candidates = pool.filter((s) => s !== nBackStimulus);
+      const idx = Math.floor(rand() * candidates.length);
+      items.push({ stimulus: candidates[idx], isTarget: false, matchIndex: null });
+    }
+  }
+
+  return items;
+}
+
+/**
+ * Convert an ExerciseConfig to GenerateNBackOptions.
+ */
+export function configToNBackOptions(
+  config: ExerciseConfig,
+  difficulty: number,
+  seed?: number,
+): GenerateNBackOptions {
+  return {
+    totalTrials: config.totalTrials,
+    nLevel: config.nLevel,
+    difficulty,
+    seed,
+  };
+}
