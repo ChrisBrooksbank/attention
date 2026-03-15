@@ -14,7 +14,7 @@
 - [x] Create src/styles/tokens.css — design tokens (calm/muted palette, spacing, type scale) (spec: 01-foundation.md)
 - [x] Create src/styles/global.css — CSS reset and global base styles (spec: 01-foundation.md)
 - [x] Create src/db/models.ts — TypeScript interfaces: Session, Trial, SessionSummary, ExerciseConfig (spec: 01-foundation.md)
-- [ ] Create src/db/index.ts — Dexie database class with sessions/trials/sessionSummaries tables and indexes (spec: 01-foundation.md)
+- [x] Create src/db/index.ts — Dexie database class with sessions/trials/sessionSummaries tables and indexes (spec: 01-foundation.md)
 - [ ] Rewrite src/App.tsx — app shell with React Router layout, persistent nav bar, and 6 routes (spec: 01-foundation.md)
 - [ ] Create src/pages/Home.tsx — placeholder page (spec: 01-foundation.md)
 - [ ] Create src/pages/Train.tsx — placeholder page (spec: 01-foundation.md)
