@@ -1,9 +1,20 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Link, useParams } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { db } from '../db'
 import { scoreSession } from '../lib/scoring'
 import type { SessionSummary, Trial } from '../db/models'
 import './Results.css'
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+}
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.28 } },
+}
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -165,9 +176,14 @@ export default function Results() {
 
   return (
     <div className="results-page">
-      <div className="results-page__inner">
+      <motion.div
+        className="results-page__inner"
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+      >
         {/* Header */}
-        <header className="results-page__header">
+        <motion.header className="results-page__header" variants={sectionVariants}>
           <p className="results-page__type">
             {EXERCISE_LABEL[session.exerciseType] ?? session.exerciseType}
           </p>
@@ -176,10 +192,10 @@ export default function Results() {
             {sessionDate} · Difficulty {session.difficulty} · {trials.length}{' '}
             trials
           </p>
-        </header>
+        </motion.header>
 
         {/* Attention weight strip */}
-        <section className="results-page__section">
+        <motion.section className="results-page__section" variants={sectionVariants}>
           <h2 className="results-page__section-title">Attention Weights</h2>
           <p className="results-page__section-desc">
             Trial-by-trial attention alignment — each cell represents one
@@ -212,10 +228,10 @@ export default function Results() {
               Correct Rejection
             </span>
           </div>
-        </section>
+        </motion.section>
 
         {/* Performance metrics */}
-        <section className="results-page__section">
+        <motion.section className="results-page__section" variants={sectionVariants}>
           <h2 className="results-page__section-title">Performance Metrics</h2>
           <div className="results-metrics">
             <MetricCard
@@ -241,10 +257,10 @@ export default function Results() {
             <MetricCard label="Mean RT" value={meanRTStr} />
             <MetricCard label="Median RT" value={medianRTStr} />
           </div>
-        </section>
+        </motion.section>
 
         {/* Trial breakdown */}
-        <section className="results-page__section">
+        <motion.section className="results-page__section" variants={sectionVariants}>
           <h2 className="results-page__section-title">Trial Breakdown</h2>
           <div className="results-counts">
             <CountCard label="Hits" value={summary.hits} color="success" />
@@ -260,10 +276,10 @@ export default function Results() {
               color="neutral"
             />
           </div>
-        </section>
+        </motion.section>
 
         {/* Actions */}
-        <div className="results-page__actions">
+        <motion.div className="results-page__actions" variants={sectionVariants}>
           <Link
             to={`/session/${session.exerciseType}`}
             className="results-page__btn"
@@ -276,8 +292,8 @@ export default function Results() {
           >
             Back to Train
           </Link>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   )
 }

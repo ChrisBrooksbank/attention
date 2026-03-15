@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { getProgressionRecommendation, type ProgressionResult } from '../lib/progression'
 import type { ExerciseType } from '../db/models'
 import './Train.css'
@@ -97,7 +98,11 @@ function ExerciseCard({
   onStart,
 }: ExerciseCardProps) {
   return (
-    <div className="exercise-card">
+    <motion.div
+      className="exercise-card"
+      whileHover={{ y: -2, boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}
+      transition={{ duration: 0.15 }}
+    >
       <div className="exercise-card__header">
         <span className="exercise-card__transformer-label">
           {def.transformerLabel}
@@ -148,10 +153,15 @@ function ExerciseCard({
         <p className="exercise-card__difficulty-hint">{def.difficultyHint}</p>
       </div>
 
-      <button className="exercise-card__start-btn" onClick={onStart}>
+      <motion.button
+        className="exercise-card__start-btn"
+        onClick={onStart}
+        whileHover={{ scale: 1.04 }}
+        whileTap={{ scale: 0.96 }}
+      >
         Start
-      </button>
-    </div>
+      </motion.button>
+    </motion.div>
   )
 }
 
@@ -229,18 +239,27 @@ export default function Train() {
           </p>
         </header>
 
-        <div className="train-page__grid">
+        <motion.div
+          className="train-page__grid"
+          variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } } }}
+          initial="hidden"
+          animate="show"
+        >
           {EXERCISES.map((def) => (
-            <ExerciseCard
+            <motion.div
               key={def.type}
-              def={def}
-              progression={progressions[def.type] ?? null}
-              difficulty={difficulties[def.type]}
-              onDifficultyChange={(d) => setDifficulty(def.type, d)}
-              onStart={() => handleStart(def.type)}
-            />
+              variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.25 } } }}
+            >
+              <ExerciseCard
+                def={def}
+                progression={progressions[def.type] ?? null}
+                difficulty={difficulties[def.type]}
+                onDifficultyChange={(d) => setDifficulty(def.type, d)}
+                onStart={() => handleStart(def.type)}
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   )

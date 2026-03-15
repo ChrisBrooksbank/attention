@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
 import Home from './pages/Home'
 import Train from './pages/Train'
 import Session from './pages/Session'
@@ -7,6 +8,40 @@ import Analytics from './pages/Analytics'
 import Learn from './pages/Learn'
 import './styles/global.css'
 import './App.css'
+
+const pageVariants = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
+}
+
+const pageTransition = { duration: 0.18, ease: 'easeInOut' as const }
+
+function AnimatedRoutes() {
+  const location = useLocation()
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
+        style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+      >
+        <Routes location={location}>
+          <Route path="/" element={<Home />} />
+          <Route path="/train" element={<Train />} />
+          <Route path="/session/:type" element={<Session />} />
+          <Route path="/results/:sessionId" element={<Results />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/learn" element={<Learn />} />
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
 
 function NavBar() {
   return (
@@ -37,14 +72,7 @@ function Layout() {
     <>
       <NavBar />
       <main className="app-main">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/train" element={<Train />} />
-          <Route path="/session/:type" element={<Session />} />
-          <Route path="/results/:sessionId" element={<Results />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/learn" element={<Learn />} />
-        </Routes>
+        <AnimatedRoutes />
       </main>
     </>
   )
@@ -52,8 +80,10 @@ function Layout() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Layout />
-    </BrowserRouter>
+    <MotionConfig reducedMotion="user">
+      <BrowserRouter>
+        <Layout />
+      </BrowserRouter>
+    </MotionConfig>
   )
 }

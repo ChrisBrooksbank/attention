@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   generateSelectiveAttention,
   configToSelectiveOptions,
@@ -148,9 +149,21 @@ function SelectiveAttentionRun({
             : 'Waiting for stimulus'
         }
       >
-        <span className="selective-attention__letter" aria-live="assertive">
-          {showLetter ? currentStimulus!.stimulus : ''}
-        </span>
+        <AnimatePresence mode="wait">
+          {showLetter && (
+            <motion.span
+              key={state.currentIndex}
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.7 }}
+              transition={{ duration: 0.07 }}
+              className="selective-attention__letter"
+              aria-live="assertive"
+            >
+              {currentStimulus!.stimulus}
+            </motion.span>
+          )}
+        </AnimatePresence>
       </button>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   generateNBack,
   configToNBackOptions,
@@ -148,9 +149,21 @@ function NBackRun({ recordTrial, finishRun, config, difficulty }: NBackRunProps)
             : 'Waiting for stimulus'
         }
       >
-        <span className="nback__letter" aria-live="assertive">
-          {showLetter ? currentStimulus!.stimulus : ''}
-        </span>
+        <AnimatePresence mode="wait">
+          {showLetter && (
+            <motion.span
+              key={state.currentIndex}
+              initial={{ opacity: 0, scale: 0.75 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.75 }}
+              transition={{ duration: 0.1 }}
+              className="nback__letter"
+              aria-live="assertive"
+            >
+              {currentStimulus!.stimulus}
+            </motion.span>
+          )}
+        </AnimatePresence>
       </button>
 
       {/* N-level badge */}

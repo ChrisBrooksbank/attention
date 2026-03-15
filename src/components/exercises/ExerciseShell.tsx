@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { db } from '../../db';
 import type { ExerciseConfig, ExerciseType, Session } from '../../db/models';
 import { useSession, toTrial, type RecordedTrial } from '../../hooks/useSession';
@@ -59,50 +60,102 @@ export default function ExerciseShell({
     });
   }, [phase, session, trials]);
 
+  const phaseVariants = {
+    initial: { opacity: 0, scale: 0.97 },
+    animate: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
+    exit: { opacity: 0, scale: 0.97, transition: { duration: 0.15 } },
+  };
+
   return (
     <div className="exercise-shell">
-      {phase === 'instructions' && (
-        <div className="exercise-shell__instructions">
-          <p className="exercise-shell__subtitle">{subtitle}</p>
-          <h1 className="exercise-shell__title">{title}</h1>
-          <ul className="exercise-shell__steps">
-            {instructions.map((line, i) => (
-              <li key={i} className="exercise-shell__step">
-                {line}
-              </li>
-            ))}
-          </ul>
-          <button className="exercise-shell__btn" onClick={startCountdown}>
-            Begin
-          </button>
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {phase === 'instructions' && (
+          <motion.div
+            key="instructions"
+            variants={phaseVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="exercise-shell__instructions"
+          >
+            <p className="exercise-shell__subtitle">{subtitle}</p>
+            <h1 className="exercise-shell__title">{title}</h1>
+            <ul className="exercise-shell__steps">
+              {instructions.map((line, i) => (
+                <li key={i} className="exercise-shell__step">
+                  {line}
+                </li>
+              ))}
+            </ul>
+            <motion.button
+              className="exercise-shell__btn"
+              onClick={startCountdown}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+            >
+              Begin
+            </motion.button>
+          </motion.div>
+        )}
 
-      {phase === 'countdown' && (
-        <div className="exercise-shell__countdown" aria-live="polite">
-          <span className="exercise-shell__countdown-number">
-            {countdownValue}
-          </span>
-        </div>
-      )}
+        {phase === 'countdown' && (
+          <motion.div
+            key="countdown"
+            variants={phaseVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="exercise-shell__countdown"
+            aria-live="polite"
+          >
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={countdownValue}
+                initial={{ opacity: 0, scale: 1.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                transition={{ duration: 0.25 }}
+                className="exercise-shell__countdown-number"
+              >
+                {countdownValue}
+              </motion.span>
+            </AnimatePresence>
+          </motion.div>
+        )}
 
-      {phase === 'run' && (
-        <div className="exercise-shell__run">
-          {children({ recordTrial, finishRun, config })}
-        </div>
-      )}
+        {phase === 'run' && (
+          <motion.div
+            key="run"
+            variants={phaseVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="exercise-shell__run"
+          >
+            {children({ recordTrial, finishRun, config })}
+          </motion.div>
+        )}
 
-      {phase === 'complete' && session && (
-        <CompleteView
-          session={session}
-          trials={trials}
-          onComplete={onComplete}
-          onReplay={() => {
-            persistedRef.current = false;
-            reset();
-          }}
-        />
-      )}
+        {phase === 'complete' && session && (
+          <motion.div
+            key="complete"
+            variants={phaseVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            <CompleteView
+              session={session}
+              trials={trials}
+              onComplete={onComplete}
+              onReplay={() => {
+                persistedRef.current = false;
+                reset();
+              }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -122,32 +175,50 @@ function CompleteView({ session, trials, onComplete, onReplay }: CompleteViewPro
   const total = trials.length;
   const accuracy = total > 0 ? Math.round(((hits + correctRejections) / total) * 100) : 0;
 
+  const statsContainer = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.07, delayChildren: 0.1 } },
+  };
+  const statItem = {
+    hidden: { opacity: 0, y: 10 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.2 } },
+  };
+
   return (
     <div className="exercise-shell__complete">
       <h2 className="exercise-shell__complete-title">Session Complete</h2>
-      <div className="exercise-shell__stats">
-        <Stat label="Accuracy" value={`${accuracy}%`} />
-        <Stat label="Hits" value={hits} />
-        <Stat label="Misses" value={misses} />
-        <Stat label="False Alarms" value={falseAlarms} />
-        <Stat label="Correct Rejections" value={correctRejections} />
-        <Stat label="Trials" value={total} />
-      </div>
+      <motion.div
+        className="exercise-shell__stats"
+        variants={statsContainer}
+        initial="hidden"
+        animate="show"
+      >
+        <motion.div variants={statItem}><Stat label="Accuracy" value={`${accuracy}%`} /></motion.div>
+        <motion.div variants={statItem}><Stat label="Hits" value={hits} /></motion.div>
+        <motion.div variants={statItem}><Stat label="Misses" value={misses} /></motion.div>
+        <motion.div variants={statItem}><Stat label="False Alarms" value={falseAlarms} /></motion.div>
+        <motion.div variants={statItem}><Stat label="Correct Rejections" value={correctRejections} /></motion.div>
+        <motion.div variants={statItem}><Stat label="Trials" value={total} /></motion.div>
+      </motion.div>
       <div className="exercise-shell__complete-actions">
         {onComplete && (
-          <button
+          <motion.button
             className="exercise-shell__btn"
             onClick={() => onComplete(session, trials)}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
           >
             View Full Results
-          </button>
+          </motion.button>
         )}
-        <button
+        <motion.button
           className="exercise-shell__btn exercise-shell__btn--secondary"
           onClick={onReplay}
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
         >
           Try Again
-        </button>
+        </motion.button>
       </div>
     </div>
   );
