@@ -60,7 +60,7 @@
 - [x] Build out src/pages/Learn.tsx — interactive Q/K/V explainer mapping transformer attention to human attention and ADHD (spec: 05-polish.md)
 - [x] Build out src/pages/Home.tsx — welcome, today's suggestion, recent sessions summary, streak display (spec: 05-polish.md)
 - [x] Add Framer Motion animations — page transitions, stimulus animations, results reveal (spec: 05-polish.md)
-- [ ] Add reduced-motion support via prefers-reduced-motion media query (spec: 05-polish.md)
+- [x] Add reduced-motion support via prefers-reduced-motion media query (spec: 05-polish.md)
 - [ ] Accessibility audit — keyboard navigation, ARIA labels, WCAG AA color contrast (spec: 05-polish.md)
 - [ ] Performance optimization — code splitting, Dexie query optimization, service worker caching strategy (spec: 05-polish.md)
 
