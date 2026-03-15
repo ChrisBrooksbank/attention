@@ -1,0 +1,123 @@
+/* Design Tokens — Calm/minimal palette for attention training */
+
+:root {
+  /* --- Color: Neutral --- */
+  --color-bg:          #f8f7f5;   /* warm off-white canvas */
+  --color-surface:     #ffffff;   /* card / panel surface */
+  --color-surface-2:   #f2f1ef;   /* subtle inset surface */
+  --color-border:      #e2e0dc;   /* dividers, outlines */
+  --color-border-2:    #cccac5;   /* stronger borders */
+
+  /* --- Color: Text --- */
+  --color-text:        #4a4742;   /* body text */
+  --color-text-muted:  #8a8783;   /* secondary / captions */
+  --color-text-strong: #1c1a18;   /* headings / emphasis */
+  --color-text-inverse:#f8f7f5;   /* text on dark bg */
+
+  /* --- Color: Accent (muted teal — calm, focused) --- */
+  --color-accent:      #4a8b8c;   /* primary interactive */
+  --color-accent-dim:  #3a6e6f;   /* hover / pressed */
+  --color-accent-bg:   rgba(74, 139, 140, 0.10);
+  --color-accent-border: rgba(74, 139, 140, 0.30);
+
+  /* --- Color: State --- */
+  --color-success:     #5a8a5a;   /* hit / correct */
+  --color-success-bg:  rgba(90, 138, 90, 0.10);
+  --color-warning:     #a07840;   /* near miss / caution */
+  --color-warning-bg:  rgba(160, 120, 64, 0.10);
+  --color-error:       #8a4a4a;   /* miss / false alarm */
+  --color-error-bg:    rgba(138, 74, 74, 0.10);
+
+  /* --- Color: Exercise states --- */
+  --color-target:      #4a6fa5;   /* target stimulus highlight */
+  --color-nontarget:   var(--color-text-muted);
+
+  /* --- Spacing scale (base-8) --- */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 128px;
+
+  /* --- Typography --- */
+  --font-sans:    system-ui, 'Segoe UI', Roboto, Helvetica, sans-serif;
+  --font-mono:    ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.875rem;  /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg:   1.125rem;  /* 18px */
+  --text-xl:   1.25rem;   /* 20px */
+  --text-2xl:  1.5rem;    /* 24px */
+  --text-3xl:  1.875rem;  /* 30px */
+  --text-4xl:  2.25rem;   /* 36px */
+  --text-5xl:  3rem;      /* 48px */
+
+  --leading-tight:  1.2;
+  --leading-snug:   1.35;
+  --leading-normal: 1.5;
+  --leading-loose:  1.7;
+
+  --font-normal:  400;
+  --font-medium:  500;
+  --font-semibold: 600;
+
+  /* --- Border radius --- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-full: 9999px;
+
+  /* --- Shadows --- */
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:  0 2px 8px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-lg:  0 4px 16px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+
+  /* --- Layout --- */
+  --max-width-content: 720px;
+  --max-width-wide:    1024px;
+  --nav-height:        56px;
+
+  /* --- Transitions --- */
+  --duration-fast:   100ms;
+  --duration-normal: 200ms;
+  --duration-slow:   350ms;
+  --ease-out:        cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:     cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg:          #16151a;
+    --color-surface:     #1e1d22;
+    --color-surface-2:   #272530;
+    --color-border:      #2e2c35;
+    --color-border-2:    #3d3a47;
+
+    --color-text:        #b8b4be;
+    --color-text-muted:  #706c78;
+    --color-text-strong: #edeaf0;
+    --color-text-inverse:#16151a;
+
+    --color-accent:      #5ea8aa;
+    --color-accent-dim:  #4d8f91;
+    --color-accent-bg:   rgba(94, 168, 170, 0.12);
+    --color-accent-border: rgba(94, 168, 170, 0.30);
+
+    --color-success:     #6aaa6a;
+    --color-success-bg:  rgba(106, 170, 106, 0.12);
+    --color-warning:     #c49050;
+    --color-warning-bg:  rgba(196, 144, 80, 0.12);
+    --color-error:       #c06060;
+    --color-error-bg:    rgba(192, 96, 96, 0.12);
+
+    --color-target:      #6a90c8;
+  }
+}
