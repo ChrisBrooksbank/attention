@@ -41,7 +41,7 @@
 - [x] Create src/components/exercises/SustainedAttention.tsx — vigilance/SART exercise with long sequences (spec: 03-full-exercise-suite.md)
 - [x] Create src/lib/generators.ts entries for N-Back working memory sequences (spec: 03-full-exercise-suite.md)
 - [x] Create src/components/exercises/NBack.tsx — N-back exercise with configurable N level (spec: 03-full-exercise-suite.md)
-- [ ] Implement difficulty progression logic — >85% accuracy → suggest increase, <50% → suggest decrease (spec: 03-full-exercise-suite.md)
+- [x] Implement difficulty progression logic — >85% accuracy → suggest increase, <50% → suggest decrease (spec: 03-full-exercise-suite.md)
 - [ ] Build out src/pages/Train.tsx — exercise selection cards with transformer framing, difficulty badges, recommendations (spec: 03-full-exercise-suite.md)
 - [ ] Build out src/pages/Session.tsx — routes to correct exercise component based on type param (spec: 03-full-exercise-suite.md)
 
