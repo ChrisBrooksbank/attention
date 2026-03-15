@@ -344,6 +344,42 @@ function CalendarHeatmap({ calendarData }: CalendarHeatmapProps) {
   )
 }
 
+// ── Consistency Metrics ───────────────────────────────────────────────────────
+
+function ConsistencySection({ consistency }: { consistency: import('../hooks/useAnalytics').ConsistencyMetrics }) {
+  const { currentStreak, longestStreak, totalSessions, avgSessionsPerWeek } = consistency
+
+  const stats: { value: string; label: string }[] = [
+    {
+      value: currentStreak === 0 ? '—' : `${currentStreak}d`,
+      label: 'Current streak',
+    },
+    {
+      value: longestStreak === 0 ? '—' : `${longestStreak}d`,
+      label: 'Longest streak',
+    },
+    {
+      value: String(totalSessions),
+      label: 'Total sessions',
+    },
+    {
+      value: avgSessionsPerWeek === 0 ? '—' : avgSessionsPerWeek.toFixed(1),
+      label: 'Avg / week',
+    },
+  ]
+
+  return (
+    <div className="consistency-metrics">
+      {stats.map(({ value, label }) => (
+        <div key={label} className="consistency-stat">
+          <span className="consistency-stat__value">{value}</span>
+          <span className="consistency-stat__label">{label}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ── Filter bar ────────────────────────────────────────────────────────────────
 
 interface FilterBarProps {
@@ -561,6 +597,12 @@ export default function Analytics() {
         {data && data.calendarData.length > 0 && (
           <section className="analytics-page__section">
             <CalendarHeatmap calendarData={data.calendarData} />
+          </section>
+        )}
+
+        {data && data.consistency.totalSessions > 0 && (
+          <section className="analytics-page__section">
+            <ConsistencySection consistency={data.consistency} />
           </section>
         )}
 
