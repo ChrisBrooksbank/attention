@@ -8,6 +8,8 @@ import {
   type AnalyticsData,
 } from '../hooks/useAnalytics'
 import type { ExerciseType } from '../db/models'
+import { db } from '../db'
+import { exportJSON, exportCSV } from '../lib/export'
 import './Analytics.css'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -529,13 +531,43 @@ function SessionRow({
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
+async function fetchAllDataForExport() {
+  const [sessions, trials, summaries] = await Promise.all([
+    db.sessions.toArray(),
+    db.trials.toArray(),
+    db.sessionSummaries.toArray(),
+  ])
+  return { exportedAt: new Date().toISOString(), sessions, trials, summaries }
+}
+
 export default function Analytics() {
   const [timeRange, setTimeRange] = useState<TimeRange>('all')
   const [exerciseFilter, setExerciseFilter] = useState<ExerciseFilter>('all')
   const [sortKey, setSortKey] = useState<SortKey>('date')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
+  const [exporting, setExporting] = useState<'json' | 'csv' | null>(null)
 
   const data = useAnalytics(timeRange, exerciseFilter)
+
+  async function handleExportJSON() {
+    setExporting('json')
+    try {
+      const exportData = await fetchAllDataForExport()
+      exportJSON(exportData)
+    } finally {
+      setExporting(null)
+    }
+  }
+
+  async function handleExportCSV() {
+    setExporting('csv')
+    try {
+      const exportData = await fetchAllDataForExport()
+      exportCSV(exportData)
+    } finally {
+      setExporting(null)
+    }
+  }
 
   function handleSort(key: SortKey) {
     if (key === sortKey) {
@@ -576,7 +608,27 @@ export default function Analytics() {
       <div className="analytics-page__inner">
         <header className="analytics-page__header">
           <p className="analytics-page__label">Analytics</p>
-          <h1 className="analytics-page__title">Session History</h1>
+          <div className="analytics-page__title-row">
+            <h1 className="analytics-page__title">Session History</h1>
+            <div className="export-buttons">
+              <button
+                className="export-btn"
+                onClick={handleExportJSON}
+                disabled={exporting !== null}
+                aria-label="Export data as JSON"
+              >
+                {exporting === 'json' ? 'Exporting…' : 'Export JSON'}
+              </button>
+              <button
+                className="export-btn"
+                onClick={handleExportCSV}
+                disabled={exporting !== null}
+                aria-label="Export data as CSV"
+              >
+                {exporting === 'csv' ? 'Exporting…' : 'Export CSV'}
+              </button>
+            </div>
+          </div>
           <p className="analytics-page__subtitle">
             Review your past training sessions and track progress over time.
           </p>

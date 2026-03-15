@@ -53,7 +53,7 @@
 - [x] Add longitudinal trend charts to Analytics — accuracy/d-prime/RT per exercise type with time range selector (spec: 04-analytics.md)
 - [x] Add calendar heatmap to Analytics — training frequency visualization (spec: 04-analytics.md)
 - [x] Add consistency metrics to Analytics — streaks, total sessions, avg sessions/week (spec: 04-analytics.md)
-- [ ] Add data export buttons (JSON/CSV) to Analytics page (spec: 04-analytics.md)
+- [x] Add data export buttons (JSON/CSV) to Analytics page (spec: 04-analytics.md)
 
 ### Phase 5: Polish
 
