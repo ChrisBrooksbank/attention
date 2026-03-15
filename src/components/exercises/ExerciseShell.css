@@ -1,0 +1,164 @@
+/* ExerciseShell — lifecycle wrapper styles */
+
+.exercise-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - var(--nav-height));
+  padding: var(--space-6) var(--space-5);
+}
+
+/* ── Instructions ── */
+
+.exercise-shell__instructions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  max-width: 480px;
+  text-align: center;
+}
+
+.exercise-shell__subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+  font-weight: var(--font-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.exercise-shell__title {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-strong);
+  line-height: var(--leading-tight);
+  margin: 0;
+}
+
+.exercise-shell__steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: left;
+  width: 100%;
+}
+
+.exercise-shell__step {
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-2);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  line-height: var(--leading-normal);
+}
+
+/* ── Button ── */
+
+.exercise-shell__btn {
+  padding: var(--space-3) var(--space-6);
+  background: var(--color-accent);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.exercise-shell__btn:hover {
+  background: var(--color-accent-dim);
+}
+
+.exercise-shell__btn--secondary {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.exercise-shell__btn--secondary:hover {
+  background: var(--color-border);
+}
+
+/* ── Countdown ── */
+
+.exercise-shell__countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exercise-shell__countdown-number {
+  font-size: var(--text-5xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-strong);
+  line-height: 1;
+}
+
+/* ── Run ── */
+
+.exercise-shell__run {
+  width: 100%;
+  max-width: var(--max-width-content);
+}
+
+/* ── Complete ── */
+
+.exercise-shell__complete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  max-width: 520px;
+  text-align: center;
+}
+
+.exercise-shell__complete-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.exercise-shell__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.exercise-shell__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: var(--color-surface-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.exercise-shell__stat-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-strong);
+}
+
+.exercise-shell__stat-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.exercise-shell__complete-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: center;
+}
