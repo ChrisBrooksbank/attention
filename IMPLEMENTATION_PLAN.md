@@ -26,7 +26,7 @@
 
 ### Phase 2: First Exercise
 
-- [ ] Create src/lib/scoring.ts — hits/misses/false-alarms/correct-rejections/accuracy/d-prime/RT calculations (spec: 02-first-exercise.md)
+- [x] Create src/lib/scoring.ts — hits/misses/false-alarms/correct-rejections/accuracy/d-prime/RT calculations (spec: 02-first-exercise.md)
 - [ ] Create src/lib/generators.ts — stimulus sequence generator for Selective Attention (CPT) (spec: 02-first-exercise.md)
 - [ ] Create src/hooks/useTimer.ts — precise stimulus timing hook (spec: 02-first-exercise.md)
 - [ ] Create src/hooks/useSession.ts — session lifecycle hook (instructions→countdown→run→complete) (spec: 02-first-exercise.md)
