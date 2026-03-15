@@ -16,13 +16,13 @@
 - [x] Create src/db/models.ts — TypeScript interfaces: Session, Trial, SessionSummary, ExerciseConfig (spec: 01-foundation.md)
 - [x] Create src/db/index.ts — Dexie database class with sessions/trials/sessionSummaries tables and indexes (spec: 01-foundation.md)
 - [x] Rewrite src/App.tsx — app shell with React Router layout, persistent nav bar, and 6 routes (spec: 01-foundation.md)
-- [ ] Create src/pages/Home.tsx — placeholder page (spec: 01-foundation.md)
-- [ ] Create src/pages/Train.tsx — placeholder page (spec: 01-foundation.md)
-- [ ] Create src/pages/Session.tsx — placeholder page (spec: 01-foundation.md)
-- [ ] Create src/pages/Results.tsx — placeholder page (spec: 01-foundation.md)
-- [ ] Create src/pages/Analytics.tsx — placeholder page (spec: 01-foundation.md)
-- [ ] Create src/pages/Learn.tsx — placeholder page (spec: 01-foundation.md)
-- [ ] Add web app manifest and service worker for offline PWA support (spec: 01-foundation.md)
+- [x] Create src/pages/Home.tsx — placeholder page (spec: 01-foundation.md)
+- [x] Create src/pages/Train.tsx — placeholder page (spec: 01-foundation.md)
+- [x] Create src/pages/Session.tsx — placeholder page (spec: 01-foundation.md)
+- [x] Create src/pages/Results.tsx — placeholder page (spec: 01-foundation.md)
+- [x] Create src/pages/Analytics.tsx — placeholder page (spec: 01-foundation.md)
+- [x] Create src/pages/Learn.tsx — placeholder page (spec: 01-foundation.md)
+- [x] Add web app manifest and service worker for offline PWA support (spec: 01-foundation.md)
 
 ### Phase 2: First Exercise
 
