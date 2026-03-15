@@ -199,6 +199,151 @@ function TrendSection({ data }: { data: AnalyticsData }) {
   )
 }
 
+// ── Calendar Heatmap ──────────────────────────────────────────────────────────
+
+const HEATMAP_WEEKS = 17
+const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const DAY_LABEL_SHOW = [1, 3, 5] // Mon, Wed, Fri
+
+function getHeatmapColor(count: number): string {
+  if (count === 0) return 'var(--color-surface-2)'
+  if (count === 1) return 'var(--heatmap-level-1)'
+  if (count === 2) return 'var(--heatmap-level-2)'
+  return 'var(--heatmap-level-3)'
+}
+
+interface CalendarHeatmapProps {
+  calendarData: { date: string; count: number }[]
+}
+
+function CalendarHeatmap({ calendarData }: CalendarHeatmapProps) {
+  const countMap = new Map<string, number>(calendarData.map((d) => [d.date, d.count]))
+
+  // Build a grid: HEATMAP_WEEKS columns (oldest→newest), 7 rows (Sun→Sat)
+  // End at today's day; pad the start column if needed
+  const today = new Date()
+  const todayDow = today.getDay() // 0=Sun
+
+  // The grid's last cell is today. Last column = this week (Sun of this week to today)
+  const startDate = new Date(today)
+  startDate.setDate(today.getDate() - todayDow - (HEATMAP_WEEKS - 1) * 7)
+
+  // Build weeks array: each week is an array of 7 { dateStr, count } (or null before startDate)
+  const weeks: Array<Array<{ dateStr: string; count: number } | null>> = []
+
+  for (let w = 0; w < HEATMAP_WEEKS; w++) {
+    const week: Array<{ dateStr: string; count: number } | null> = []
+    for (let d = 0; d < 7; d++) {
+      const cellDate = new Date(startDate)
+      cellDate.setDate(startDate.getDate() + w * 7 + d)
+      if (cellDate > today) {
+        week.push(null)
+      } else {
+        const dateStr = cellDate.toISOString().slice(0, 10)
+        week.push({ dateStr, count: countMap.get(dateStr) ?? 0 })
+      }
+    }
+    weeks.push(week)
+  }
+
+  // Month labels: one per column where the 1st of a month appears
+  const monthLabels: Array<{ col: number; label: string }> = []
+  for (let w = 0; w < HEATMAP_WEEKS; w++) {
+    const firstNonNull = weeks[w].find((c) => c !== null)
+    if (firstNonNull) {
+      const d = new Date(firstNonNull.dateStr)
+      if (d.getDate() <= 7) {
+        monthLabels.push({
+          col: w,
+          label: d.toLocaleDateString(undefined, { month: 'short' }),
+        })
+      }
+    }
+  }
+
+  const totalSessions = calendarData.reduce((sum, d) => sum + d.count, 0)
+
+  return (
+    <div className="calendar-heatmap">
+      <div className="calendar-heatmap__header">
+        <p className="calendar-heatmap__title">Training Frequency</p>
+        {totalSessions > 0 && (
+          <p className="calendar-heatmap__total">
+            {totalSessions} session{totalSessions !== 1 ? 's' : ''} total
+          </p>
+        )}
+      </div>
+
+      <div className="calendar-heatmap__grid-wrap">
+        {/* Day-of-week labels */}
+        <div className="calendar-heatmap__dow-labels">
+          {DAY_LABELS.map((label, i) => (
+            <span key={i} className="calendar-heatmap__dow-label">
+              {DAY_LABEL_SHOW.includes(i) ? label : ''}
+            </span>
+          ))}
+        </div>
+
+        <div className="calendar-heatmap__cols-wrap">
+          {/* Month labels row */}
+          <div className="calendar-heatmap__month-labels">
+            {weeks.map((_, w) => {
+              const ml = monthLabels.find((m) => m.col === w)
+              return (
+                <span key={w} className="calendar-heatmap__month-label">
+                  {ml ? ml.label : ''}
+                </span>
+              )
+            })}
+          </div>
+
+          {/* Cells grid */}
+          <div className="calendar-heatmap__cols">
+            {weeks.map((week, w) => (
+              <div key={w} className="calendar-heatmap__week">
+                {week.map((cell, d) => (
+                  <div
+                    key={d}
+                    className="calendar-heatmap__cell"
+                    style={{ background: cell ? getHeatmapColor(cell.count) : 'transparent' }}
+                    title={
+                      cell
+                        ? cell.count > 0
+                          ? `${cell.dateStr}: ${cell.count} session${cell.count !== 1 ? 's' : ''}`
+                          : cell.dateStr
+                        : ''
+                    }
+                    aria-label={
+                      cell
+                        ? cell.count > 0
+                          ? `${cell.dateStr}: ${cell.count} session${cell.count !== 1 ? 's' : ''}`
+                          : `${cell.dateStr}: no sessions`
+                        : ''
+                    }
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div className="calendar-heatmap__legend">
+        <span className="calendar-heatmap__legend-label">Less</span>
+        {[0, 1, 2, 3].map((level) => (
+          <div
+            key={level}
+            className="calendar-heatmap__legend-cell"
+            style={{ background: getHeatmapColor(level) }}
+          />
+        ))}
+        <span className="calendar-heatmap__legend-label">More</span>
+      </div>
+    </div>
+  )
+}
+
 // ── Filter bar ────────────────────────────────────────────────────────────────
 
 interface FilterBarProps {
@@ -412,6 +557,12 @@ export default function Analytics() {
         />
 
         {data && <TrendSection data={data} />}
+
+        {data && data.calendarData.length > 0 && (
+          <section className="analytics-page__section">
+            <CalendarHeatmap calendarData={data.calendarData} />
+          </section>
+        )}
 
         <section className="analytics-page__section">
           {data === undefined && (

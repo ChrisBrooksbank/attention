@@ -355,6 +355,134 @@
 .trend-legend--sustained::before { background: var(--color-warning); }
 .trend-legend--nback::before     { background: var(--color-target); }
 
+/* ── Calendar Heatmap ─────────────────────────────────────────────────────── */
+
+:root {
+  --heatmap-level-1: rgba(74, 139, 140, 0.35);
+  --heatmap-level-2: rgba(74, 139, 140, 0.60);
+  --heatmap-level-3: rgba(74, 139, 140, 0.90);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --heatmap-level-1: rgba(94, 168, 170, 0.30);
+    --heatmap-level-2: rgba(94, 168, 170, 0.55);
+    --heatmap-level-3: rgba(94, 168, 170, 0.85);
+  }
+}
+
+.calendar-heatmap {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow: hidden;
+}
+
+.calendar-heatmap__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.calendar-heatmap__title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.calendar-heatmap__total {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.calendar-heatmap__grid-wrap {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+}
+
+.calendar-heatmap__dow-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 18px; /* align with cells below month labels */
+  flex-shrink: 0;
+}
+
+.calendar-heatmap__dow-label {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  height: 12px;
+  line-height: 12px;
+  white-space: nowrap;
+}
+
+.calendar-heatmap__cols-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.calendar-heatmap__month-labels {
+  display: flex;
+  gap: 2px;
+  height: 16px;
+}
+
+.calendar-heatmap__month-label {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  width: 12px;
+  white-space: nowrap;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.calendar-heatmap__cols {
+  display: flex;
+  gap: 2px;
+}
+
+.calendar-heatmap__week {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.calendar-heatmap__cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.calendar-heatmap__legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  justify-content: flex-end;
+}
+
+.calendar-heatmap__legend-label {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.calendar-heatmap__legend-cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
 @media (max-width: 560px) {
   .session-metric--hide-mobile {
     display: none;
