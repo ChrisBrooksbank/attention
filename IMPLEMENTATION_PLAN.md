@@ -47,7 +47,7 @@
 
 ### Phase 4: Analytics
 
-- [ ] Create src/hooks/useAnalytics.ts — aggregate stats queries from Dexie (spec: 04-analytics.md)
+- [x] Create src/hooks/useAnalytics.ts — aggregate stats queries from Dexie (spec: 04-analytics.md)
 - [ ] Create src/lib/export.ts — JSON and CSV export functions (spec: 04-analytics.md)
 - [ ] Build out src/pages/Analytics.tsx — session history list (sortable/filterable) (spec: 04-analytics.md)
 - [ ] Add longitudinal trend charts to Analytics — accuracy/d-prime/RT per exercise type with time range selector (spec: 04-analytics.md)
