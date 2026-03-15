@@ -13,6 +13,12 @@ export class AttentionDB extends Dexie {
       trials: 'id, sessionId, timestamp, isTarget, correct',
       sessionSummaries: 'sessionId',
     });
+    // v2: compound index for efficient exerciseType+startedAt range queries
+    this.version(2).stores({
+      sessions: 'id, exerciseType, startedAt, completedAt, difficulty, [exerciseType+startedAt]',
+      trials: 'id, sessionId, timestamp, isTarget, correct',
+      sessionSummaries: 'sessionId',
+    });
   }
 }
 

@@ -1,13 +1,15 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
-import Home from './pages/Home'
-import Train from './pages/Train'
-import Session from './pages/Session'
-import Results from './pages/Results'
-import Analytics from './pages/Analytics'
-import Learn from './pages/Learn'
 import './styles/global.css'
 import './App.css'
+
+const Home = lazy(() => import('./pages/Home'))
+const Train = lazy(() => import('./pages/Train'))
+const Session = lazy(() => import('./pages/Session'))
+const Results = lazy(() => import('./pages/Results'))
+const Analytics = lazy(() => import('./pages/Analytics'))
+const Learn = lazy(() => import('./pages/Learn'))
 
 const pageVariants = {
   initial: { opacity: 0, y: 8 },
@@ -30,14 +32,16 @@ function AnimatedRoutes() {
         transition={pageTransition}
         style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
       >
-        <Routes location={location}>
-          <Route path="/" element={<Home />} />
-          <Route path="/train" element={<Train />} />
-          <Route path="/session/:type" element={<Session />} />
-          <Route path="/results/:sessionId" element={<Results />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/learn" element={<Learn />} />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes location={location}>
+            <Route path="/" element={<Home />} />
+            <Route path="/train" element={<Train />} />
+            <Route path="/session/:type" element={<Session />} />
+            <Route path="/results/:sessionId" element={<Results />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/learn" element={<Learn />} />
+          </Routes>
+        </Suspense>
       </motion.div>
     </AnimatePresence>
   )

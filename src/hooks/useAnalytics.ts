@@ -141,13 +141,27 @@ export function useAnalytics(
       allSummaries.map((s) => [s.sessionId, s]),
     );
 
-    // ── 3. Filter sessions for history + trends
-    const filteredSessions = allSessions.filter((s) => {
-      const date = new Date(s.startedAt);
-      if (cutoff && date < cutoff) return false;
-      if (exerciseFilter !== 'all' && s.exerciseType !== exerciseFilter) return false;
-      return true;
-    });
+    // ── 3. Filter sessions for history + trends using indexes where possible
+    let filteredSessions: Session[];
+    if (exerciseFilter !== 'all' && cutoff) {
+      // Use compound index: [exerciseType+startedAt]
+      filteredSessions = await db.sessions
+        .where('[exerciseType+startedAt]')
+        .between([exerciseFilter, cutoff], [exerciseFilter, new Date(8640000000000000)])
+        .toArray();
+    } else if (exerciseFilter !== 'all') {
+      filteredSessions = await db.sessions
+        .where('exerciseType')
+        .equals(exerciseFilter)
+        .sortBy('startedAt');
+    } else if (cutoff) {
+      filteredSessions = await db.sessions
+        .where('startedAt')
+        .aboveOrEqual(cutoff)
+        .toArray();
+    } else {
+      filteredSessions = allSessions;
+    }
 
     const sessionsWithSummaries: SessionWithSummary[] = filteredSessions.map((session) => ({
       session,
