@@ -37,7 +37,7 @@
 
 ### Phase 3: Full Exercise Suite
 
-- [ ] Create src/lib/generators.ts entries for Sustained Attention (rare-target vigilance, ~10% targets) (spec: 03-full-exercise-suite.md)
+- [x] Create src/lib/generators.ts entries for Sustained Attention (rare-target vigilance, ~10% targets) (spec: 03-full-exercise-suite.md)
 - [ ] Create src/components/exercises/SustainedAttention.tsx — vigilance/SART exercise with long sequences (spec: 03-full-exercise-suite.md)
 - [ ] Create src/lib/generators.ts entries for N-Back working memory sequences (spec: 03-full-exercise-suite.md)
 - [ ] Create src/components/exercises/NBack.tsx — N-back exercise with configurable N level (spec: 03-full-exercise-suite.md)

@@ -108,3 +108,93 @@ export function configToSelectiveOptions(
     seed,
   };
 }
+
+export interface GenerateSustainedOptions {
+  totalTrials?: number;
+  targetRate?: number; // fraction of trials that are targets, default 0.10
+  targetDigit?: string; // the rare target digit, default '3'
+  difficulty?: number; // 1–10; higher = more distractors similar to target
+  seed?: number;
+}
+
+/**
+ * Generate a Sustained Attention (vigilance/SART) stimulus sequence.
+ * Stimuli are digits 1–9; one digit is the rare target (~10% by default).
+ * Higher difficulty adds more digits visually close to the target.
+ * Sequences are reproducible given the same seed.
+ */
+export function generateSustainedAttention(opts: GenerateSustainedOptions = {}): StimulusItem[] {
+  const {
+    totalTrials = 150,
+    targetRate = 0.1,
+    targetDigit = '3',
+    difficulty = 1,
+    seed = Date.now(),
+  } = opts;
+
+  const rand = mulberry32(seed);
+
+  // All digits except target are non-targets
+  const allDigits = ['1', '2', '3', '4', '5', '6', '7', '8', '9'].filter(
+    (d) => d !== targetDigit,
+  );
+
+  // At higher difficulty, include a second "confusable" digit more often.
+  // The confusable digits look similar to the target (same curve or shape).
+  const confusableMap: Record<string, string[]> = {
+    '3': ['8', '6'],
+    '1': ['7', '4'],
+    '2': ['7', '5'],
+    '4': ['9', '7'],
+    '5': ['6', '8'],
+    '6': ['8', '5'],
+    '7': ['1', '4'],
+    '8': ['3', '6'],
+    '9': ['4', '6'],
+  };
+
+  let distractor_pool: string[];
+  if (difficulty <= 3) {
+    // Use only non-confusable digits
+    const confusable = new Set(confusableMap[targetDigit] ?? []);
+    distractor_pool = allDigits.filter((d) => !confusable.has(d));
+  } else if (difficulty <= 6) {
+    distractor_pool = allDigits;
+  } else {
+    // Boost confusable distractors by repeating them
+    const confusable = confusableMap[targetDigit] ?? [];
+    distractor_pool = [...allDigits, ...confusable, ...confusable];
+  }
+
+  const targetCount = Math.round(totalTrials * targetRate);
+  const distractorCount = totalTrials - targetCount;
+
+  const items: StimulusItem[] = [];
+
+  for (let i = 0; i < targetCount; i++) {
+    items.push({ stimulus: targetDigit, isTarget: true });
+  }
+
+  for (let i = 0; i < distractorCount; i++) {
+    const idx = Math.floor(rand() * distractor_pool.length);
+    items.push({ stimulus: distractor_pool[idx], isTarget: false });
+  }
+
+  return shuffle(items, rand);
+}
+
+/**
+ * Convert an ExerciseConfig to GenerateSustainedOptions.
+ */
+export function configToSustainedOptions(
+  config: ExerciseConfig,
+  difficulty: number,
+  seed?: number,
+): GenerateSustainedOptions {
+  return {
+    totalTrials: config.totalTrials,
+    targetRate: config.targetRate,
+    difficulty,
+    seed,
+  };
+}
