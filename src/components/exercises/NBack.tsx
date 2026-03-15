@@ -109,7 +109,16 @@ function NBackRun({ recordTrial, finishRun, config, difficulty }: NBackRunProps)
     state.currentIndex >= 0 && state.currentIndex < nLevel;
 
   return (
-    <div className="nback" role="main" aria-label={`${nLevel}-Back exercise`}>
+    <div className="nback" aria-label={`${nLevel}-Back exercise`}>
+      {/* Screen-reader live region for stimulus announcements (outside button) */}
+      <div
+        aria-live="assertive"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {showLetter ? currentStimulus!.stimulus : ''}
+      </div>
+
       {/* Progress bar */}
       <div className="nback__progress-track" aria-hidden="true">
         <div
@@ -143,11 +152,7 @@ function NBackRun({ recordTrial, finishRun, config, difficulty }: NBackRunProps)
             handlePress();
           }
         }}
-        aria-label={
-          showLetter
-            ? `Stimulus: ${currentStimulus!.stimulus}`
-            : 'Waiting for stimulus'
-        }
+        aria-label="Respond to matching stimulus"
       >
         <AnimatePresence mode="wait">
           {showLetter && (
@@ -158,7 +163,7 @@ function NBackRun({ recordTrial, finishRun, config, difficulty }: NBackRunProps)
               exit={{ opacity: 0, scale: 0.75 }}
               transition={{ duration: 0.1 }}
               className="nback__letter"
-              aria-live="assertive"
+              aria-hidden="true"
             >
               {currentStimulus!.stimulus}
             </motion.span>
@@ -167,7 +172,7 @@ function NBackRun({ recordTrial, finishRun, config, difficulty }: NBackRunProps)
       </button>
 
       {/* N-level badge */}
-      <div className="nback__level-badge" aria-label={`${nLevel}-back level`}>
+      <div className="nback__level-badge" aria-hidden="true">
         {nLevel}-back
       </div>
     </div>

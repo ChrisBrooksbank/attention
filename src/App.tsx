@@ -45,7 +45,7 @@ function AnimatedRoutes() {
 
 function NavBar() {
   return (
-    <nav className="app-nav">
+    <nav className="app-nav" aria-label="Main navigation">
       <div className="app-nav__inner">
         <span className="app-nav__brand">attention</span>
         <div className="app-nav__links">
@@ -70,8 +70,9 @@ function NavBar() {
 function Layout() {
   return (
     <>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <NavBar />
-      <main className="app-main">
+      <main id="main-content" className="app-main">
         <AnimatedRoutes />
       </main>
     </>

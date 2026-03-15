@@ -158,6 +158,7 @@ function ExerciseCard({
         onClick={onStart}
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.96 }}
+        aria-label={`Start ${def.name}`}
       >
         Start
       </motion.button>

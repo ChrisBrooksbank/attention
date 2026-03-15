@@ -131,7 +131,11 @@ function SuggestionCard({ type, reason, onStart }: SuggestionCardProps) {
         <p className="home-suggestion__reason">{reason}</p>
         <p className="home-suggestion__transformer">{info.transformerLabel}</p>
       </div>
-      <button className="home-suggestion__btn" onClick={onStart}>
+      <button
+        className="home-suggestion__btn"
+        onClick={onStart}
+        aria-label={`Start ${info.name} session`}
+      >
         Start Session
       </button>
     </div>
@@ -202,9 +206,10 @@ function QuickStart({ onStart }: QuickStartProps) {
               key={type}
               className="home-quick-btn"
               onClick={() => onStart(type)}
+              aria-label={`Quick start ${info.name}`}
             >
-              <span className="home-quick-btn__name">{info.name}</span>
-              <span className="home-quick-btn__transformer">{info.transformerLabel}</span>
+              <span className="home-quick-btn__name" aria-hidden="true">{info.name}</span>
+              <span className="home-quick-btn__transformer" aria-hidden="true">{info.transformerLabel}</span>
             </button>
           )
         })}
@@ -292,7 +297,7 @@ export default function Home() {
           <section className="home-section">
             <div className="home-section__header">
               <h2 className="home-section__title">Recent Sessions</h2>
-              <Link to="/analytics" className="home-section__link">View all</Link>
+              <Link to="/analytics" className="home-section__link" aria-label="View all sessions in Analytics">View all</Link>
             </div>
             <div className="home-recent-list">
               {recentSessions.map(({ session, summary }) => (

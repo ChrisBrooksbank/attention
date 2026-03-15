@@ -10,7 +10,7 @@
 
   /* --- Color: Text --- */
   --color-text:        #4a4742;   /* body text */
-  --color-text-muted:  #8a8783;   /* secondary / captions */
+  --color-text-muted:  #706c69;   /* secondary / captions — meets WCAG AA 4.5:1 on --color-bg */
   --color-text-strong: #1c1a18;   /* headings / emphasis */
   --color-text-inverse:#f8f7f5;   /* text on dark bg */
 
@@ -102,7 +102,7 @@
     --color-border-2:    #3d3a47;
 
     --color-text:        #b8b4be;
-    --color-text-muted:  #706c78;
+    --color-text-muted:  #9490a0;   /* lightened for WCAG AA 4.5:1 on dark --color-bg */
     --color-text-strong: #edeaf0;
     --color-text-inverse:#16151a;
 

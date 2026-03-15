@@ -112,9 +112,17 @@ function SustainedAttentionRun({
   return (
     <div
       className="sustained-attention"
-      role="main"
       aria-label="Sustained Attention exercise"
     >
+      {/* Screen-reader live region for stimulus announcements (outside button) */}
+      <div
+        aria-live="assertive"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {showDigit ? currentStimulus!.stimulus : ''}
+      </div>
+
       {/* Progress bar */}
       <div className="sustained-attention__progress-track" aria-hidden="true">
         <div
@@ -144,11 +152,7 @@ function SustainedAttentionRun({
             handlePress();
           }
         }}
-        aria-label={
-          showDigit
-            ? `Stimulus: ${currentStimulus!.stimulus}`
-            : 'Waiting for stimulus'
-        }
+        aria-label="Respond to target stimulus"
       >
         <AnimatePresence mode="wait">
           {showDigit && (
@@ -159,7 +163,7 @@ function SustainedAttentionRun({
               exit={{ opacity: 0, scale: 0.7 }}
               transition={{ duration: 0.07 }}
               className="sustained-attention__digit"
-              aria-live="assertive"
+              aria-hidden="true"
             >
               {currentStimulus!.stimulus}
             </motion.span>

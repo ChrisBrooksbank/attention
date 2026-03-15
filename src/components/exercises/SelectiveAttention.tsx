@@ -111,9 +111,17 @@ function SelectiveAttentionRun({
   return (
     <div
       className="selective-attention"
-      role="main"
       aria-label="Selective Attention exercise"
     >
+      {/* Screen-reader live region for stimulus announcements (outside button) */}
+      <div
+        aria-live="assertive"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {showLetter ? currentStimulus!.stimulus : ''}
+      </div>
+
       {/* Progress bar */}
       <div className="selective-attention__progress-track" aria-hidden="true">
         <div
@@ -143,11 +151,7 @@ function SelectiveAttentionRun({
             handlePress();
           }
         }}
-        aria-label={
-          showLetter
-            ? `Stimulus: ${currentStimulus!.stimulus}`
-            : 'Waiting for stimulus'
-        }
+        aria-label="Respond to target stimulus"
       >
         <AnimatePresence mode="wait">
           {showLetter && (
@@ -158,7 +162,7 @@ function SelectiveAttentionRun({
               exit={{ opacity: 0, scale: 0.7 }}
               transition={{ duration: 0.07 }}
               className="selective-attention__letter"
-              aria-live="assertive"
+              aria-hidden="true"
             >
               {currentStimulus!.stimulus}
             </motion.span>
