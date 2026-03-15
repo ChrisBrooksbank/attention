@@ -1,0 +1,100 @@
+/* SustainedAttention — vigilance/SART exercise styles */
+
+.sustained-attention {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-4);
+  min-height: 480px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── Progress ── */
+
+.sustained-attention__progress-track {
+  width: 100%;
+  height: 4px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.sustained-attention__progress-fill {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+  transition: width var(--duration-normal) var(--ease-out);
+}
+
+/* ── Target reminder ── */
+
+.sustained-attention__reminder {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+  text-align: center;
+}
+
+.sustained-attention__reminder strong {
+  color: var(--color-target);
+  font-weight: var(--font-semibold);
+  font-size: var(--text-base);
+}
+
+/* ── Stimulus area (full-width tap target) ── */
+
+.sustained-attention__stimulus-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  height: 240px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+  /* Reset button styles */
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sustained-attention__stimulus-area:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.sustained-attention__stimulus-area--active {
+  border-color: var(--color-accent-border);
+}
+
+.sustained-attention__stimulus-area--pressed {
+  background: var(--color-accent-bg);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Digit display ── */
+
+.sustained-attention__digit {
+  font-size: 7rem;
+  font-weight: var(--font-semibold);
+  color: var(--color-text-strong);
+  line-height: 1;
+  user-select: none;
+  /* Prevent layout shift — reserve space even when empty */
+  min-height: 1em;
+  display: block;
+  text-align: center;
+  font-family: var(--font-mono);
+}
