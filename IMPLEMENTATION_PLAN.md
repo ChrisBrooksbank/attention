@@ -10,7 +10,7 @@
 
 ### Phase 1: Foundation
 
-- [ ] Install vite-plugin-pwa and add PWA config to vite.config.ts (spec: 01-foundation.md)
+- [x] Install vite-plugin-pwa and add PWA config to vite.config.ts (spec: 01-foundation.md)
 - [ ] Create src/styles/tokens.css — design tokens (calm/muted palette, spacing, type scale) (spec: 01-foundation.md)
 - [ ] Create src/styles/global.css — CSS reset and global base styles (spec: 01-foundation.md)
 - [ ] Create src/db/models.ts — TypeScript interfaces: Session, Trial, SessionSummary, ExerciseConfig (spec: 01-foundation.md)
