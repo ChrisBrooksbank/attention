@@ -1,6 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useAnalytics, type TimeRange, type ExerciseFilter } from '../hooks/useAnalytics'
+import {
+  useAnalytics,
+  type TimeRange,
+  type ExerciseFilter,
+  type TrendPoint,
+  type AnalyticsData,
+} from '../hooks/useAnalytics'
 import type { ExerciseType } from '../db/models'
 import './Analytics.css'
 
@@ -20,6 +26,178 @@ const EXERCISE_SHORT: Record<ExerciseType, string> = {
 
 type SortKey = 'date' | 'accuracy' | 'dPrime' | 'rt'
 type SortDir = 'asc' | 'desc'
+
+// ── Trend Charts ───────────────────────────────────────────────────────────────
+
+const EXERCISE_TYPE_LIST: ExerciseType[] = ['selective', 'sustained', 'nback']
+
+const CHART_W = 560
+const CHART_H = 140
+const CHART_PAD = { top: 8, right: 16, bottom: 28, left: 44 }
+
+interface TrendLineChartProps {
+  label: string
+  trendsByExercise: Record<ExerciseType, TrendPoint[]>
+  getValue: (p: TrendPoint) => number | null
+  formatY: (v: number) => string
+  yDomainMin?: number
+  yDomainMax?: number
+}
+
+function TrendLineChart({
+  label,
+  trendsByExercise,
+  getValue,
+  formatY,
+  yDomainMin,
+  yDomainMax,
+}: TrendLineChartProps) {
+  const plotW = CHART_W - CHART_PAD.left - CHART_PAD.right
+  const plotH = CHART_H - CHART_PAD.top - CHART_PAD.bottom
+
+  const seriesData = EXERCISE_TYPE_LIST.map((type) => ({
+    type,
+    points: trendsByExercise[type]
+      .map((p) => ({ date: p.date, value: getValue(p) }))
+      .filter((p): p is { date: Date; value: number } => p.value !== null),
+  })).filter((s) => s.points.length > 0)
+
+  if (seriesData.length === 0) {
+    return (
+      <div className="trend-chart">
+        <p className="trend-chart__title">{label}</p>
+        <p className="trend-chart__empty">No data yet</p>
+      </div>
+    )
+  }
+
+  const allValues = seriesData.flatMap((s) => s.points.map((p) => p.value))
+  const allTimes = seriesData.flatMap((s) => s.points.map((p) => p.date.getTime()))
+
+  let vMin = yDomainMin ?? Math.min(...allValues)
+  let vMax = yDomainMax ?? Math.max(...allValues)
+  if (vMin === vMax) { vMin -= 1; vMax += 1 }
+
+  const tMin = Math.min(...allTimes)
+  const tMax = Math.max(...allTimes)
+  const tRange = tMax - tMin || 1
+
+  function toX(ts: number): number {
+    return CHART_PAD.left + ((ts - tMin) / tRange) * plotW
+  }
+  function toY(v: number): number {
+    return CHART_PAD.top + (1 - (v - vMin) / (vMax - vMin)) * plotH
+  }
+
+  const yTicks = [vMin, (vMin + vMax) / 2, vMax]
+  const xLabelLeft = new Date(tMin).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+  const xLabelRight = new Date(tMax).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+
+  return (
+    <div className="trend-chart">
+      <p className="trend-chart__title">{label}</p>
+      <svg
+        viewBox={`0 0 ${CHART_W} ${CHART_H}`}
+        className="trend-chart__svg"
+        role="img"
+        aria-label={`${label} over time`}
+      >
+        {/* Grid lines */}
+        {yTicks.map((v, i) => {
+          const y = toY(v)
+          return (
+            <g key={i}>
+              <line
+                x1={CHART_PAD.left} y1={y}
+                x2={CHART_W - CHART_PAD.right} y2={y}
+                className="chart-grid"
+              />
+              <text x={CHART_PAD.left - 6} y={y + 4} className="chart-axis-text" textAnchor="end">
+                {formatY(v)}
+              </text>
+            </g>
+          )
+        })}
+
+        {/* X axis labels */}
+        <text x={CHART_PAD.left} y={CHART_H - 4} className="chart-axis-text" textAnchor="start">
+          {xLabelLeft}
+        </text>
+        {tMin !== tMax && (
+          <text x={CHART_W - CHART_PAD.right} y={CHART_H - 4} className="chart-axis-text" textAnchor="end">
+            {xLabelRight}
+          </text>
+        )}
+
+        {/* Lines (>= 2 points) */}
+        {seriesData
+          .filter((s) => s.points.length >= 2)
+          .map(({ type, points }) => {
+            const d = points
+              .map((p, i) => `${i === 0 ? 'M' : 'L'}${toX(p.date.getTime())},${toY(p.value)}`)
+              .join(' ')
+            return <path key={type} d={d} className={`chart-line chart-line--${type}`} fill="none" />
+          })}
+
+        {/* Dots */}
+        {seriesData.map(({ type, points }) =>
+          points.map((p, i) => (
+            <circle
+              key={i}
+              cx={toX(p.date.getTime())}
+              cy={toY(p.value)}
+              r={3.5}
+              className={`chart-dot chart-dot--${type}`}
+            />
+          )),
+        )}
+      </svg>
+
+      {/* Legend */}
+      <div className="trend-chart__legend">
+        {seriesData.map(({ type }) => (
+          <span key={type} className={`trend-legend trend-legend--${type}`}>
+            {EXERCISE_SHORT[type]}
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function TrendSection({ data }: { data: AnalyticsData }) {
+  const { trendsByExercise } = data
+  const hasAnyData = EXERCISE_TYPE_LIST.some((type) => trendsByExercise[type].length > 0)
+  if (!hasAnyData) return null
+
+  return (
+    <section className="analytics-page__section">
+      <h2 className="analytics-trends-title">Progress Over Time</h2>
+      <div className="trends-grid">
+        <TrendLineChart
+          label="Accuracy"
+          trendsByExercise={trendsByExercise}
+          getValue={(p) => p.accuracy * 100}
+          formatY={(v) => `${Math.round(v)}%`}
+          yDomainMin={0}
+          yDomainMax={100}
+        />
+        <TrendLineChart
+          label="d′ Sensitivity"
+          trendsByExercise={trendsByExercise}
+          getValue={(p) => p.dPrime}
+          formatY={(v) => v.toFixed(1)}
+        />
+        <TrendLineChart
+          label="Mean RT (ms)"
+          trendsByExercise={trendsByExercise}
+          getValue={(p) => (p.meanReactionMs > 0 ? p.meanReactionMs : null)}
+          formatY={(v) => `${Math.round(v)}`}
+        />
+      </div>
+    </section>
+  )
+}
 
 // ── Filter bar ────────────────────────────────────────────────────────────────
 
@@ -232,6 +410,8 @@ export default function Analytics() {
           onExercise={setExerciseFilter}
           onSort={handleSort}
         />
+
+        {data && <TrendSection data={data} />}
 
         <section className="analytics-page__section">
           {data === undefined && (

@@ -252,6 +252,109 @@
   margin-left: var(--space-1);
 }
 
+/* ── Trend Charts ─────────────────────────────────────────────────────────── */
+
+.analytics-trends-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-strong);
+  margin: 0 0 var(--space-4);
+}
+
+.trends-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.trend-chart {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.trend-chart__title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.trend-chart__empty {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  padding: var(--space-4) 0;
+  margin: 0;
+  text-align: center;
+}
+
+.trend-chart__svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.chart-grid {
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.chart-axis-text {
+  font-size: 11px;
+  fill: var(--color-text-muted);
+  font-family: var(--font-sans);
+}
+
+.chart-line {
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart-line--selective { stroke: var(--color-accent); }
+.chart-line--sustained { stroke: var(--color-warning); }
+.chart-line--nback     { stroke: var(--color-target); }
+
+.chart-dot {
+  stroke: var(--color-surface);
+  stroke-width: 1.5;
+}
+
+.chart-dot--selective { fill: var(--color-accent); }
+.chart-dot--sustained { fill: var(--color-warning); }
+.chart-dot--nback     { fill: var(--color-target); }
+
+.trend-chart__legend {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.trend-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.trend-legend::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.trend-legend--selective::before { background: var(--color-accent); }
+.trend-legend--sustained::before { background: var(--color-warning); }
+.trend-legend--nback::before     { background: var(--color-target); }
+
 @media (max-width: 560px) {
   .session-metric--hide-mobile {
     display: none;
