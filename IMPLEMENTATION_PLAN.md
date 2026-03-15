@@ -33,7 +33,7 @@
 - [x] Create src/components/exercises/ExerciseShell.tsx — wrapper: instructions → countdown → run → results flow (spec: 02-first-exercise.md)
 - [x] Create src/components/exercises/SelectiveAttention.tsx — CPT exercise (stream of letters, tap target) (spec: 02-first-exercise.md)
 - [x] Build out src/pages/Results.tsx — attention weight strip, hit/miss/FA/CR counts, accuracy, d-prime, RT (spec: 02-first-exercise.md)
-- [ ] Persist session and trials to Dexie after exercise completion (spec: 02-first-exercise.md)
+- [x] Persist session and trials to Dexie after exercise completion (spec: 02-first-exercise.md)
 
 ### Phase 3: Full Exercise Suite
 

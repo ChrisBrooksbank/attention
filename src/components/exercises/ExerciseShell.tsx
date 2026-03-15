@@ -1,6 +1,8 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
+import { db } from '../../db';
 import type { ExerciseConfig, ExerciseType, Session } from '../../db/models';
-import { useSession, type RecordedTrial } from '../../hooks/useSession';
+import { useSession, toTrial, type RecordedTrial } from '../../hooks/useSession';
+import { scoreSession } from '../../lib/scoring';
 import './ExerciseShell.css';
 
 export interface ExerciseRunProps {
@@ -38,6 +40,24 @@ export default function ExerciseShell({
   });
 
   const { phase, countdownValue, trials, session } = state;
+
+  // Persist to Dexie once when exercise completes
+  const persistedRef = useRef(false);
+  useEffect(() => {
+    if (phase !== 'complete' || session === null || persistedRef.current) return;
+    persistedRef.current = true;
+
+    const trialRecords = trials.map((t) => toTrial(t, session.id));
+    const summary = scoreSession(session.id, trialRecords);
+
+    db.transaction('rw', db.sessions, db.trials, db.sessionSummaries, async () => {
+      await db.sessions.put(session);
+      await db.trials.bulkPut(trialRecords);
+      await db.sessionSummaries.put(summary);
+    }).catch((err) => {
+      console.error('[ExerciseShell] Failed to persist session:', err);
+    });
+  }, [phase, session, trials]);
 
   return (
     <div className="exercise-shell">
@@ -77,7 +97,10 @@ export default function ExerciseShell({
           session={session}
           trials={trials}
           onComplete={onComplete}
-          onReplay={reset}
+          onReplay={() => {
+            persistedRef.current = false;
+            reset();
+          }}
         />
       )}
     </div>
