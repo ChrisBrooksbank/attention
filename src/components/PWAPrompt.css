@@ -1,0 +1,68 @@
+.pwa-prompt {
+  position: fixed;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg, 0 4px 24px rgba(0, 0, 0, 0.15));
+  max-width: calc(100vw - var(--space-6));
+}
+
+.pwa-prompt__text {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.pwa-prompt__actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.pwa-prompt__btn {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background-color var(--duration-fast), color var(--duration-fast);
+}
+
+.pwa-prompt__btn:hover {
+  background-color: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.pwa-prompt__btn--primary {
+  background-color: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+
+.pwa-prompt__btn--primary:hover {
+  background-color: var(--color-accent-dim);
+  border-color: var(--color-accent-dim);
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .pwa-prompt {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .pwa-prompt__text {
+    white-space: normal;
+  }
+}

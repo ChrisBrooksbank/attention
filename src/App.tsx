@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
+import PWAPrompt from './components/PWAPrompt'
 import './styles/global.css'
 import './App.css'
 
@@ -79,6 +80,7 @@ function Layout() {
       <main id="main-content" className="app-main">
         <AnimatedRoutes />
       </main>
+      <PWAPrompt />
     </>
   )
 }
