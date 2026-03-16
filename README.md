@@ -1,73 +1,80 @@
-# React + TypeScript + Vite
+# Attention Trainer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Train your attention like a transformer trains its weights.**
 
-Currently, two official plugins are available:
+Your brain runs an attention mechanism every waking moment — deciding what to focus on, what to suppress, and what to carry forward. This app makes that process visible and trainable, using the same Query / Key / Value framework that powers transformer neural networks.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**[Try it now](https://attention-app.netlify.app)**
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## The exercises
 
-## Expanding the ESLint configuration
+### Selective Attention — Q·K alignment
+A rapid letter stream. One target letter. Your job: respond only when the target appears, ignore everything else. Trains the precision of the match between your attentional query and the perceptual keys of incoming stimuli.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Sustained Attention — Query stabilisation
+Long sequences, rare targets, relentless monotony. The challenge isn't detection — it's maintaining a sharp query signal across time without drifting. Vigilance in its purest form.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### N-Back — Value retention
+See a stimulus. Hold it. N steps later, decide: does the current input match what you stored? Directly stresses working memory — how long an attended value survives before interference overwrites it.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## What you get back
+
+Every session produces signal-detection metrics that map directly onto the attention model:
+
+| Metric | What it tells you |
+|--------|-------------------|
+| **Accuracy** | Overall weight precision — did attention land on the right stimuli? |
+| **d' (d-prime)** | Discriminability — how well your system separates signal from noise |
+| **Hit rate** | Target sensitivity — are the right keys activating? |
+| **False alarm rate** | Distractor suppression — are irrelevant keys leaking through? |
+| **Reaction time** | Processing latency — how fast the Q·K match resolves |
+
+Results are stored locally in IndexedDB. Nothing leaves your device.
+
+---
+
+## The model
+
+```
+Q × K → weights × V = output
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+**Query** — your attentional goal. *"What am I looking for?"*
+**Key** — the features of each incoming stimulus. *"What does this input offer?"*
+**Value** — the information extracted once attention lands. *"What do I carry forward?"*
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The exercises isolate and train each component. The Learn page in the app explores this framework in depth, including how ADHD maps onto specific failure modes of the weighting mechanism.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Tech
+
+React 19 · TypeScript · Vite · Framer Motion · Dexie (IndexedDB) · PWA
+
+Offline-first. Installable. No accounts, no servers, no tracking.
+
+---
+
+## Development
+
+```bash
+npm install
+npm run dev
 ```
+
+Build for production:
+
+```bash
+npm run build
+npm run preview
+```
+
+---
+
+## License
+
+MIT
