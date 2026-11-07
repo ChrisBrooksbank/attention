@@ -1,5 +1,9 @@
 # Attention Trainer
 
+<!-- hub-link -->
+> Part of [Chris's app hub](https://chrisbrooksbank-hub.netlify.app) - a directory of all my deployed apps.
+<!-- /hub-link -->
+
 **Train your attention like a transformer trains its weights.**
 
 Your brain runs an attention mechanism every waking moment — deciding what to focus on, what to suppress, and what to carry forward. This app makes that process visible and trainable, using the same Query / Key / Value framework that powers transformer neural networks.
